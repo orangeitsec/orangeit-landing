@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist de Maturidade em Segurança — OrangeIT</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #E87722;
+    --orange-dim: #b85c18;
+    --dark: #080808;
+    --dark2: #0f0f0f;
+    --card: #131313;
+    --card2: #191919;
+    --border: #252525;
+    --white: #ffffff;
+    --offwhite: #e8e8e8;
+    --gray: #999999;
+    --lgray: #555555;
+    --red: #CC2200;
+    --green: #2E7D32;
+    --blue: #1565C0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--offwhite);
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ────────────────────────────────── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* ── NAV ──────────────────────────────────────────── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 48px;
+    background: rgba(8,8,8,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+  .nav-logo span:first-child { color: var(--orange); }
+  .nav-logo span:last-child  { color: var(--white); }
+
+  .nav-cta {
+    background: var(--orange);
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 9px 22px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--orange-dim); }
+
+  /* ── HERO ─────────────────────────────────────────── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 0;
+    padding: 100px 0 60px;
+    overflow: hidden;
+  }
+
+  /* code rain bg */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to right, rgba(8,8,8,0.97) 45%, rgba(8,8,8,0.7) 70%, rgba(8,8,8,0.4) 100%),
+      radial-gradient(ellipse at 80% 50%, rgba(232,119,34,0.08) 0%, transparent 60%);
+    z-index: 0;
+  }
+
+  .hero-matrix {
+    position: absolute;
+    right: 0; top: 0;
+    width: 55%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .hero-left {
+    position: relative;
+    z-index: 1;
+    padding: 0 60px 0 80px;
+  }
+
+  .hero-right {
+    position: relative;
+    z-index: 1;
+    padding: 0 80px 0 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    background: var(--orange);
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    margin-bottom: 20px;
+  }
+
+  .hero-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(52px, 6vw, 80px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 24px;
+  }
+
+  .hero-title .accent { color: var(--orange); }
+
+  .hero-sub {
+    font-size: 16px;
+    color: var(--gray);
+    line-height: 1.7;
+    max-width: 480px;
+    margin-bottom: 32px;
+  }
+
+  .hero-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 36px;
+  }
+
+  .pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 7px 14px;
+    font-size: 13px;
+    color: var(--offwhite);
+  }
+
+  .pill-dot {
+    width: 6px; height: 6px;
+    background: var(--orange);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .meta-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--orange);
+    line-height: 1;
+  }
+
+  .meta-lbl {
+    font-size: 11px;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── FORM CARD ────────────────────────────────────── */
+  .form-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--orange);
+    padding: 36px;
+    position: relative;
+  }
+
+  .form-card::before {
+    content: '';
+    position: absolute;
+    top: -3px; left: 0;
+    width: 60px; height: 3px;
+    background: var(--dark);
+  }
+
+  .form-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .form-sub {
+    font-size: 13px;
+    color: var(--gray);
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  input, select {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    color: var(--offwhite);
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    padding: 11px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+  }
+
+  input::placeholder { color: var(--lgray); }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    cursor: pointer;
+  }
+
+  select option { background: var(--card2); }
+
+  input:focus, select:focus { border-color: var(--orange); }
+
+  .btn-submit {
+    grid-column: 1 / -1;
+    background: var(--orange);
+    color: var(--white);
+    border: none;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 16px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 6px;
+    width: 100%;
+  }
+
+  .btn-submit:hover { background: var(--orange-dim); }
+  .btn-submit:active { transform: scale(0.99); }
+
+  .form-disclaimer {
+    grid-column: 1 / -1;
+    font-size: 11px;
+    color: var(--lgray);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* success state */
+  .success-state {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px 0;
+    gap: 14px;
+  }
+
+  .success-icon {
+    width: 56px; height: 56px;
+    background: var(--orange);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+
+  .success-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--white);
+    text-transform: uppercase;
+  }
+
+  .success-sub {
+    font-size: 13px;
+    color: var(--gray);
+    max-width: 280px;
+  }
+
+  .btn-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--orange);
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 14px 28px;
+    transition: background 0.2s;
+  }
+
+  .btn-download:hover { background: var(--orange-dim); }
+
+  /* ── SOCIAL PROOF STRIP ───────────────────────────── */
+  .proof-strip {
+    position: relative;
+    z-index: 1;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .proof-label {
+    font-size: 11px;
+    color: var(--lgray);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    flex-shrink: 0;
+  }
+
+  .proof-items {
+    display: flex;
+    gap: 36px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .proof-item {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .proof-item:hover { color: var(--offwhite); }
+
+  /* ── SECTIONS ─────────────────────────────────────── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 100px 80px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--orange);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 24px; height: 2px;
+    background: var(--orange);
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(36px, 4vw, 52px);
+    font-weight: 800;
+    line-height: 1.05;
+    color: var(--white);
+    text-transform: uppercase;
+    max-width: 640px;
+    margin-bottom: 20px;
+  }
+
+  .section-title .accent { color: var(--orange); }
+
+  .section-body {
+    font-size: 15px;
+    color: var(--gray);
+    max-width: 560px;
+    line-height: 1.75;
+  }
+
+  /* ── WHY SECTION ──────────────────────────────────── */
+  .why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .why-left {}
+
+  .why-problems {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 48px;
+  }
+
+  .problem-card {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--red);
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.5s, transform 0.5s;
+  }
+
+  .problem-card.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .problem-x {
+    color: var(--red);
+    font-size: 18px;
+    font-weight: 800;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .problem-text strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .problem-text span {
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.5;
+  }
+
+  .why-right {
+    padding-top: 120px;
+  }
+
+  .solutions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .solution-card {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--orange);
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.5s, transform 0.5s;
+  }
+
+  .solution-card.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .solution-check {
+    color: var(--orange);
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .solution-text strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .solution-text span {
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.5;
+  }
+
+  /* ── CATEGORIES SECTION ───────────────────────────── */
+  .categories-section {
+    background: var(--dark2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .categories-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .categories-header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .categories-header .section-label {
+    justify-content: center;
+  }
+
+  .categories-header .section-label::before { display: none; }
+
+  .categories-header .section-title {
+    margin: 0 auto 16px;
+    text-align: center;
+  }
+
+  .categories-header .section-body {
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+
+  .cat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--orange);
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s, transform 0.5s, border-color 0.2s;
+    cursor: default;
+  }
+
+  .cat-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .cat-card:hover {
+    border-color: var(--orange);
+    background: var(--card2);
+  }
+
+  .cat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--orange);
+    line-height: 1;
+    opacity: 0.5;
+  }
+
+  .cat-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+  }
+
+  .cat-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .cat-item {
+    font-size: 12px;
+    color: var(--gray);
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    line-height: 1.4;
+  }
+
+  .cat-item::before {
+    content: '▸';
+    color: var(--orange);
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-size: 10px;
+  }
+
+  .cat-score {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--lgray);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .cat-score strong {
+    color: var(--orange);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+  }
+
+  /* ── LEVELS SECTION ───────────────────────────────── */
+  .levels-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .levels-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 40px;
+  }
+
+  .level-card {
+    display: flex;
+    gap: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    opacity: 0;
+    transform: translateX(-16px);
+    transition: opacity 0.5s, transform 0.5s;
+  }
+
+  .level-card.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .level-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 76px;
+    padding: 16px 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--white);
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .level-body {
+    padding: 16px 18px;
+    background: var(--card);
+  }
+
+  .level-body strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .level-body span {
+    font-size: 12px;
+    color: var(--gray);
+    line-height: 1.5;
+  }
+
+  /* ── CTA SECTION ──────────────────────────────────── */
+  .cta-section {
+    background: var(--dark2);
+    border-top: 1px solid var(--border);
+    text-align: center;
+    padding: 100px 80px;
+  }
+
+  .cta-inner {
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .cta-section .section-label { justify-content: center; }
+  .cta-section .section-label::before { display: none; }
+  .cta-section .section-title { text-align: center; margin: 0 auto; }
+  .cta-section .section-body { text-align: center; }
+
+  .btn-cta-large {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--orange);
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 18px 40px;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .btn-cta-large:hover { background: var(--orange-dim); }
+  .btn-cta-large:active { transform: scale(0.99); }
+
+  .btn-arrow {
+    font-size: 18px;
+    transition: transform 0.2s;
+  }
+
+  .btn-cta-large:hover .btn-arrow { transform: translateX(4px); }
+
+  /* ── FOOTER ───────────────────────────────────────── */
+  footer {
+    position: relative;
+    z-index: 1;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    padding: 32px 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .footer-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .footer-logo span:first-child { color: var(--orange); }
+  .footer-logo span:last-child  { color: var(--white); }
+
+  .footer-tagline {
+    font-size: 12px;
+    color: var(--lgray);
+    font-style: italic;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .footer-link {
+    font-size: 12px;
+    color: var(--lgray);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+
+  .footer-link:hover { color: var(--orange); }
+
+  .orange-bar {
+    height: 5px;
+    background: var(--orange);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── MATRIX CANVAS ────────────────────────────────── */
+  #matrix-canvas {
+    position: absolute;
+    inset: 0;
+    opacity: 0.18;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ── ANIMATIONS ───────────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes pulse-border {
+    0%, 100% { border-color: var(--orange); }
+    50%       { border-color: var(--orange-dim); }
+  }
+
+  .hero-left > * {
+    opacity: 0;
+    animation: fadeUp 0.7s forwards;
+  }
+
+  .hero-left .eyebrow      { animation-delay: 0.1s; }
+  .hero-left .hero-title   { animation-delay: 0.2s; }
+  .hero-left .hero-sub     { animation-delay: 0.3s; }
+  .hero-left .hero-pills   { animation-delay: 0.4s; }
+  .hero-left .hero-meta    { animation-delay: 0.5s; }
+
+  .hero-right .form-card {
+    opacity: 0;
+    animation: fadeUp 0.7s 0.5s forwards;
+  }
+
+  /* ── RESPONSIVE ───────────────────────────────────── */
+  @media (max-width: 1100px) {
+    .hero { grid-template-columns: 1fr; padding: 100px 40px 60px; }
+    .hero-left { padding: 0 0 40px; }
+    .hero-right { padding: 0; }
+    .cat-grid { grid-template-columns: repeat(3, 1fr); }
+    .why-grid { grid-template-columns: 1fr; gap: 40px; }
+    .why-right { padding-top: 0; }
+    .levels-inner { grid-template-columns: 1fr; gap: 40px; }
+    section { padding: 70px 40px; }
+    .proof-strip { padding: 20px 40px; }
+    footer { padding: 24px 40px; }
+  }
+
+  @media (max-width: 700px) {
+    nav { padding: 14px 24px; }
+    .cat-grid { grid-template-columns: 1fr 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .hero { padding: 90px 24px 50px; }
+    section { padding: 60px 24px; }
+    .cta-section { padding: 60px 24px; }
+    footer { padding: 20px 24px; flex-direction: column; align-items: flex-start; gap: 12px; }
+    .proof-strip { padding: 16px 24px; }
+    .proof-items { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo"><span>Orange</span><span>IT</span></a>
+  <a href="#formulario" class="nav-cta">Baixar grátis</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-matrix">
+    <canvas id="matrix-canvas"></canvas>
+  </div>
+
+  <div class="hero-left">
+    <span class="eyebrow">Checklist de Maturidade em Segurança</span>
+    <h1 class="hero-title">
+      Sua empresa<br>
+      está <span class="accent">pronta</span><br>
+      para um<br>
+      pentest?
+    </h1>
+    <p class="hero-sub">
+      Um guia prático para líderes de negócio e equipes de TI avaliarem o nível real de prontidão cibernética da sua organização — antes de contratar qualquer serviço de segurança.
+    </p>
+    <div class="hero-pills">
+      <span class="pill"><span class="pill-dot"></span>25 perguntas em 5 categorias</span>
+      <span class="pill"><span class="pill-dot"></span>50 pontos de avaliação</span>
+      <span class="pill"><span class="pill-dot"></span>4 níveis de maturidade</span>
+      <span class="pill"><span class="pill-dot"></span>100% gratuito</span>
+    </div>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-val">200+</span>
+        <span class="meta-lbl">Pentests / ano</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-val">15+</span>
+        <span class="meta-lbl">Anos de expertise</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-val">98%</span>
+        <span class="meta-lbl">Redução de incidentes</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right" id="formulario">
+    <div class="form-card">
+      <div class="form-title">Baixe o checklist gratuitamente</div>
+      <div class="form-sub">Preencha os dados abaixo para acessar o material completo.</div>
+
+      <form id="lead-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="nome">Nome *</label>
+            <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required>
+          </div>
+          <div class="form-group">
+            <label for="email">E-mail corporativo *</label>
+            <input type="email" id="email" name="email" placeholder="voce@empresa.com" required>
+          </div>
+          <div class="form-group">
+            <label for="cargo">Cargo *</label>
+            <input type="text" id="cargo" name="cargo" placeholder="Ex: CISO, Gerente de TI, CEO" required>
+          </div>
+          <div class="form-group">
+            <label for="empresa">Empresa *</label>
+            <input type="text" id="empresa" name="empresa" placeholder="Nome da empresa" required>
+          </div>
+          <div class="form-group">
+            <label for="setor">Setor / Segmento *</label>
+            <select id="setor" name="setor" required>
+              <option value="" disabled selected>Selecione o setor</option>
+              <option>Financeiro / Bancário</option>
+              <option>Saúde</option>
+              <option>Tecnologia / SaaS</option>
+              <option>Varejo / E-commerce</option>
+              <option>Indústria / Manufatura</option>
+              <option>Educação</option>
+              <option>Logística / Transporte</option>
+              <option>Governo / Setor Público</option>
+              <option>Energia / Utilities</option>
+              <option>Seguros</option>
+              <option>Outros</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="telefone">WhatsApp / Telefone</label>
+            <input type="tel" id="telefone" name="telefone" placeholder="+55 (11) 99999-9999">
+          </div>
+          <button type="submit" class="btn-submit">
+            Baixar checklist grátis &nbsp;→
+          </button>
+          <p class="form-disclaimer">
+            Seus dados estão seguros. Não enviamos spam.<br>
+            Ao baixar, você concorda com nossa política de privacidade.
+          </p>
+        </div>
+      </form>
+
+      <div class="success-state" id="success">
+        <div class="success-icon">✓</div>
+        <div class="success-title">Acesso liberado!</div>
+        <p class="success-sub">Seu checklist está pronto. Clique abaixo para fazer o download.</p>
+        <a href="OrangeIT_Checklist_Maturidade_2026.pdf" download class="btn-download">
+          ↓ &nbsp;Baixar PDF agora
+        </a>
+        <p class="success-sub" style="margin-top:8px; font-size:11px;">
+          Em breve você receberá um e-mail da Orange IT com materiais complementares.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF STRIP -->
+<div class="proof-strip">
+  <span class="proof-label">Parceiros & Tecnologias</span>
+  <div class="proof-items">
+    <span class="proof-item">Microsoft</span>
+    <span class="proof-item">Fortinet</span>
+    <span class="proof-item">Sophos</span>
+    <span class="proof-item">SentinelOne</span>
+    <span class="proof-item">Splunk</span>
+    <span class="proof-item">Axur</span>
+    <span class="proof-item">Vicarius</span>
+  </div>
+</div>
+
+<!-- WHY SECTION -->
+<section>
+  <div class="why-grid">
+    <div class="why-left">
+      <div class="section-label">O problema</div>
+      <h2 class="section-title">Por que o pentest tradicional <span class="accent">não basta</span></h2>
+      <p class="section-body">Antes de contratar um pentest, você precisa saber em que estado a sua segurança se encontra. Sem esse diagnóstico, você pode estar jogando dinheiro fora — ou pior, descobrindo problemas sem capacidade de remediá-los.</p>
+
+      <div class="why-problems">
+        <div class="problem-card">
+          <span class="problem-x">✕</span>
+          <div class="problem-text">
+            <strong>Evento anual desatualizado</strong>
+            <span>Um teste feito em janeiro já está desatualizado em março. O cenário de ameaças muda toda semana.</span>
+          </div>
+        </div>
+        <div class="problem-card">
+          <span class="problem-x">✕</span>
+          <div class="problem-text">
+            <strong>Relatório que não chega ao board</strong>
+            <span>Documentos técnicos de 200 páginas não são lidos pelo CEO ou CFO. A decisão de remediar fica travada.</span>
+          </div>
+        </div>
+        <div class="problem-card">
+          <span class="problem-x">✕</span>
+          <div class="problem-text">
+            <strong>Foco em compliance, não em segurança</strong>
+            <span>A maioria dos provedores entrega um papel de conformidade. Isso não é o mesmo que estar seguro.</span>
+          </div>
+        </div>
+        <div class="problem-card">
+          <span class="problem-x">✕</span>
+          <div class="problem-text">
+            <strong>Sem validação pós-correção</strong>
+            <span>A vulnerabilidade foi corrigida? Talvez. Mas alguém voltou para confirmar que a correção funcionou?</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="why-right">
+      <div class="section-label">A solução</div>
+      <h2 class="section-title">Comece com <span class="accent">autodiagnóstico</span></h2>
+      <p class="section-body">Este checklist foi criado para que você entenda exatamente onde está antes de tomar qualquer decisão de investimento em segurança.</p>
+
+      <div class="solutions" style="margin-top: 32px;">
+        <div class="solution-card">
+          <span class="solution-check">▸</span>
+          <div class="solution-text">
+            <strong>Visão clara do seu nível atual</strong>
+            <span>25 perguntas estruturadas em 5 categorias que cobrem toda a superfície de risco da sua organização.</span>
+          </div>
+        </div>
+        <div class="solution-card">
+          <span class="solution-check">▸</span>
+          <div class="solution-text">
+            <strong>Linguagem para CEO e CISO</strong>
+            <span>Desenhado para ser acessível tanto para gestores de negócio quanto para times técnicos.</span>
+          </div>
+        </div>
+        <div class="solution-card">
+          <span class="solution-check">▸</span>
+          <div class="solution-text">
+            <strong>Priorização baseada em impacto real</strong>
+            <span>Cada categoria tem peso diferente. O checklist aponta onde focar primeiro para reduzir risco mais rápido.</span>
+          </div>
+        </div>
+        <div class="solution-card">
+          <span class="solution-check">▸</span>
+          <div class="solution-text">
+            <strong>Interpretação dos resultados incluída</strong>
+            <span>4 níveis de maturidade com diagnóstico, recomendação e próximos passos específicos para cada cenário.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES SECTION -->
+<section class="categories-section">
+  <div class="categories-inner">
+    <div class="categories-header">
+      <div class="section-label">Conteúdo do checklist</div>
+      <h2 class="section-title">5 categorias.<br><span class="accent">25 perguntas.</span> 50 pontos.</h2>
+      <p class="section-body">Cada categoria avalia um pilar crítico de segurança. Você pontua de 0 a 2 em cada item e descobre exatamente onde estão seus maiores riscos.</p>
+    </div>
+
+    <div class="cat-grid">
+      <div class="cat-card">
+        <div class="cat-num">01</div>
+        <div class="cat-title">Inventário e Visibilidade de Ativos</div>
+        <div class="cat-items">
+          <span class="cat-item">Inventário de endpoints e servidores</span>
+          <span class="cat-item">Mapeamento de aplicações críticas</span>
+          <span class="cat-item">Controle de shadow IT</span>
+          <span class="cat-item">Visibilidade em cloud (AWS/Azure/GCP)</span>
+          <span class="cat-item">Gestão de terceiros e integrações</span>
+        </div>
+        <div class="cat-score">Até <strong>10 pts</strong></div>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-num">02</div>
+        <div class="cat-title">Gestão de Identidades e Acessos</div>
+        <div class="cat-items">
+          <span class="cat-item">Política de senhas e MFA</span>
+          <span class="cat-item">Princípio do menor privilégio</span>
+          <span class="cat-item">Controle de contas privilegiadas</span>
+          <span class="cat-item">Acessos de terceiros e fornecedores</span>
+          <span class="cat-item">SSO e federação de identidade</span>
+        </div>
+        <div class="cat-score">Até <strong>10 pts</strong></div>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-num">03</div>
+        <div class="cat-title">Detecção e Resposta a Incidentes</div>
+        <div class="cat-items">
+          <span class="cat-item">Monitoramento e alertas (SIEM/EDR)</span>
+          <span class="cat-item">Plano de resposta documentado</span>
+          <span class="cat-item">Testes e simulações periódicas</span>
+          <span class="cat-item">Backup e recuperação validados</span>
+          <span class="cat-item">Notificação LGPD e ANPD</span>
+        </div>
+        <div class="cat-score">Até <strong>10 pts</strong></div>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-num">04</div>
+        <div class="cat-title">Gestão de Vulnerabilidades</div>
+        <div class="cat-items">
+          <span class="cat-item">Processo de gestão de patches</span>
+          <span class="cat-item">Varreduras periódicas automatizadas</span>
+          <span class="cat-item">Segurança em aplicações (SAST/DAST)</span>
+          <span class="cat-item">Hardening e configuração segura</span>
+          <span class="cat-item">Pentest nos últimos 12 meses</span>
+        </div>
+        <div class="cat-score">Até <strong>10 pts</strong></div>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-num">05</div>
+        <div class="cat-title">Cultura, Governança e Conformidade</div>
+        <div class="cat-items">
+          <span class="cat-item">Política de Segurança da Informação</span>
+          <span class="cat-item">Treinamentos e simulações de phishing</span>
+          <span class="cat-item">CISO ou responsável formal</span>
+          <span class="cat-item">Conformidade LGPD / ISO 27001 / NIST</span>
+          <span class="cat-item">Segurança nas decisões de negócio</span>
+        </div>
+        <div class="cat-score">Até <strong>10 pts</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEVELS SECTION -->
+<section>
+  <div class="levels-inner">
+    <div>
+      <div class="section-label">Resultados</div>
+      <h2 class="section-title">O que sua pontuação <span class="accent">revela</span></h2>
+      <p class="section-body">Cada faixa de pontuação vem acompanhada de um diagnóstico completo e recomendações específicas para o seu contexto — não apenas uma nota.</p>
+      <div style="margin-top: 36px;">
+        <a href="#formulario" class="btn-cta-large" style="text-decoration:none; display:inline-flex;">
+          Quero minha pontuação
+          <span class="btn-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="levels-list">
+      <div class="level-card">
+        <div class="level-badge" style="background: var(--red);">0–15</div>
+        <div class="level-body">
+          <strong>Nível Inicial — Alta Exposição ao Risco</strong>
+          <span>Controles básicos ausentes ou inconsistentes. Prioridade: implementar fundamentos antes de pentest. A Orange IT pode criar um roadmap de maturidade para você.</span>
+        </div>
+      </div>
+      <div class="level-card">
+        <div class="level-badge" style="background: var(--orange);">16–25</div>
+        <div class="level-body">
+          <strong>Em Desenvolvimento — Lacunas Relevantes</strong>
+          <span>Fundações presentes mas com gaps significativos. Pentest focado nas áreas críticas é recomendado enquanto os controles básicos são consolidados.</span>
+        </div>
+      </div>
+      <div class="level-card">
+        <div class="level-badge" style="background: var(--green);">26–35</div>
+        <div class="level-body">
+          <strong>Nível Estruturado — Pronto para Pentest</strong>
+          <span>Postura estruturada. Momento ideal para realizar um pentest completo e avançar para um modelo proativo de segurança cibernética.</span>
+        </div>
+      </div>
+      <div class="level-card">
+        <div class="level-badge" style="background: var(--blue);">36–50</div>
+        <div class="level-body">
+          <strong>Nível Avançado — Red Team e PTaaS</strong>
+          <span>Maturidade elevada. Pentest convencional pode não ser suficiente. Exercícios de Red Team, simulações de APT e testes contínuos são o próximo passo.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <div class="section-label">Gratuito. Agora.</div>
+    <h2 class="section-title">Descubra onde está <span class="accent">sua segurança</span> hoje</h2>
+    <p class="section-body">Download imediato. Sem cadastro complexo. Em menos de 20 minutos você terá um diagnóstico completo da maturidade cibernética da sua organização.</p>
+    <a href="#formulario" class="btn-cta-large">
+      Baixar checklist gratuitamente
+      <span class="btn-arrow">→</span>
+    </a>
+    <p style="font-size: 12px; color: var(--lgray); margin-top: 8px;">
+      Mais de 200 pentests realizados · Inteligência ofensiva desde 2010
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="orange-bar"></div>
+<footer>
+  <div>
+    <a href="#" class="footer-logo"><span>Orange</span><span>IT</span></a>
+    <p class="footer-tagline" style="margin-top: 6px;">Inteligência ofensiva em neutralização de ameaça digital.</p>
+  </div>
+  <div class="footer-links">
+    <a href="mailto:contato@orangeit.com.br" class="footer-link">contato@orangeit.com.br</a>
+    <a href="https://orangeit.com.br" class="footer-link" target="_blank">orangeit.com.br</a>
+    <a href="https://linkedin.com/company/orangeit" class="footer-link" target="_blank">LinkedIn</a>
+  </div>
+  <p style="font-size: 11px; color: var(--lgray);">© 2026 OrangeIT. Todos os direitos reservados.</p>
+</footer>
+
+<script>
+// ── MATRIX RAIN ─────────────────────────────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('matrix-canvas');
+  const ctx = canvas.getContext('2d');
+  const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ';
+  let cols, drops;
+
+  function resize() {
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    cols  = Math.floor(canvas.width / 16);
+    drops = Array(cols).fill(0).map(() => Math.random() * -50);
+  }
+
+  function draw() {
+    ctx.fillStyle = 'rgba(8,8,8,0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.font = '13px monospace';
+
+    for (let i = 0; i < cols; i++) {
+      const char = chars[Math.floor(Math.random() * chars.length)];
+      const x = i * 16;
+      const y = drops[i] * 16;
+      // orange top char
+      ctx.fillStyle = `rgba(232, 119, 34, ${Math.random() > 0.95 ? 0.9 : 0.3})`;
+      ctx.fillText(char, x, y);
+      if (y > canvas.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i] += 0.4;
+    }
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  setInterval(draw, 50);
+})();
+
+// ── SCROLL ANIMATIONS ────────────────────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.problem-card, .solution-card, .cat-card, .level-card')
+  .forEach(el => observer.observe(el));
+
+// ── FORM SUBMIT ──────────────────────────────────────────────────────────────
+document.getElementById('lead-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const btn = this.querySelector('.btn-submit');
+  btn.textContent = 'Processando...';
+  btn.disabled = true;
+
+  // Collect form data
+  const data = {
+    nome:     document.getElementById('nome').value,
+    email:    document.getElementById('email').value,
+    cargo:    document.getElementById('cargo').value,
+    empresa:  document.getElementById('empresa').value,
+    setor:    document.getElementById('setor').value,
+    telefone: document.getElementById('telefone').value,
+    data:     new Date().toLocaleString('pt-BR'),
+  };
+
+  // Log lead (substitua pela integração real: HubSpot, RD Station, Webhook, etc.)
+  console.log('Novo lead OrangeIT:', data);
+
+  // Simula delay de envio
+  setTimeout(() => {
+    document.getElementById('lead-form').style.display = 'none';
+    const success = document.getElementById('success');
+    success.style.display = 'flex';
+
+    // Scroll suave para o sucesso
+    success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 900);
+});
+
+// ── SMOOTH SCROLL ─────────────────────────────────────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
